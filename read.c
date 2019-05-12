@@ -1,4 +1,10 @@
-
+/*
+ * scan.c
+ *      Prueba de I2C por software usando WiringPi
+ *      Reinoso G. 09/02/2017
+ *
+ *      gcc -lwiringPi soft_i2c.c scan.c -o scan
+ */
  
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +32,7 @@ int main (void)
 	float val;
 	float current;
 	
-	mcp3426_t adc;
+	mcp3426_t adc[2];
 
 	wiringPiSetup () ;
 	wiringPiSPISetup (2, SPISPEED);
@@ -38,23 +44,25 @@ int main (void)
 	}
 
 
-	_mcp3426_init(&adc, MCPPINBASE+16*MCPHV3+7,MCPPINBASE+16*MCPHV2+1);
+	_mcp3426_init(&adc[0], MCPPINBASE+16*MCPHV3+7,MCPPINBASE+16*MCPHV2+1);
+	_mcp3426_init(&adc[1], MCPPINBASE+16*MCPHV3+8,MCPPINBASE+16*MCPHV2+1);
 
+
+	for (uint8_t i= 0; i< 2; i++){ 
 	//void _mcp3426_setconfig(mcp3426_t* self, int gain, int samplerate, int mode, int channel);
-	_mcp3426_setconfig(&adc,0,2,0,0);
-	val = _mcp3426_read(&adc);
+	  _mcp3426_setconfig(&adc[i],0,2,0,0);
+	  val = _mcp3426_read(&adc[i]);
+	  printf( "val=%4.5f\n",val);
+	  current = val*1e2;
+	  printf( "current (nA)=%4.5f\n",current);
 
-	printf( "val=%4.5f\n",val);
-	current = val*1e2;
-	printf( "current (nA)=%4.5f\n",current);
 
-
-	_mcp3426_setconfig(&adc,0,2,0,1);
-	val = _mcp3426_read(&adc);
-	printf( "val=%4.5f\n",val);
-	current = val*1e2;
-	printf( "current (nA)=%4.5f\n",current);
-	
+	  _mcp3426_setconfig(&adc[i],0,2,0,1);
+	  val = _mcp3426_read(&adc[i]);
+	  printf( "val=%4.5f\n",val);
+	  current = val*1e2;
+	  printf( "current (nA)=%4.5f\n",current);
+	}
 
 
 
