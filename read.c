@@ -1,10 +1,4 @@
-/*
- * scan.c
- *      Prueba de I2C por software usando WiringPi
- *      Reinoso G. 09/02/2017
- *
- *      gcc -lwiringPi soft_i2c.c scan.c -o scan
- */
+
  
 #include <stdio.h>
 #include <stdlib.h>
