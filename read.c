@@ -32,7 +32,7 @@ int main (void)
 	float val;
 	float current;
 	
-	mcp3426_t adc[2];
+	mcp3426_t adc[48];
 
 	wiringPiSetup () ;
 	wiringPiSPISetup (2, SPISPEED);
@@ -44,12 +44,28 @@ int main (void)
 	}
 
 
-	_mcp3426_init(&adc[0], MCPPINBASE+16*MCPHV3+7,MCPPINBASE+16*MCPHV2+1);
-	_mcp3426_init(&adc[1], MCPPINBASE+16*MCPHV3+8,MCPPINBASE+16*MCPHV2+1);
+	//	_mcp3426_init(&adc[0], MCPPINBASE+16*MCPHV3+7,MCPPINBASE+16*MCPHV2+1);
+	//_mcp3426_init(&adc[0], MCPPINBASE+16*MCPHV0+2,MCPPINBASE+16*MCPHV0+1);
+	//	_mcp3426_init(&adc[1], MCPPINBASE+16*MCPHV3+8,MCPPINBASE+16*MCPHV2+1);
+	//_mcp3426_init(&adc[1], MCPPINBASE+16*MCPHV0+3,MCPPINBASE+16*MCPHV0+1);
 
+	for (int i=0; i<14; i++){
+	  _mcp3426_init(&adc[i], MCPPINBASE+16*MCPHV0+(i+2),MCPPINBASE+16*MCPHV0+1);
+	}
+	for (int i=14; i<24; i++){
+	  _mcp3426_init(&adc[i], MCPPINBASE+16*MCPHV1+(i-14),MCPPINBASE+16*MCPHV0+1);	
+	}
+	for (int i=24; i<38; i++){
+	  _mcp3426_init(&adc[i], MCPPINBASE+16*MCPHV2+(i-24+2),MCPPINBASE+16*MCPHV2+1);	
+	}
+	for (int i=38; i<48; i++){
+	  _mcp3426_init(&adc[i], MCPPINBASE+16*MCPHV3+(i-38),MCPPINBASE+16*MCPHV2+1);	
+	}
 
-	for (uint8_t i= 0; i< 2; i++){ 
+	for (uint8_t i= 0; i< 48; i++){ 
 	//void _mcp3426_setconfig(mcp3426_t* self, int gain, int samplerate, int mode, int channel);
+	  printf( "z%d\n",i );
+
 	  _mcp3426_setconfig(&adc[i],0,2,0,0);
 	  val = _mcp3426_read(&adc[i]);
 	  printf( "val=%4.5f\n",val);
@@ -62,6 +78,7 @@ int main (void)
 	  printf( "val=%4.5f\n",val);
 	  current = val*1e2;
 	  printf( "current (nA)=%4.5f\n",current);
+	  printf( "\n" );
 	}
 
 
