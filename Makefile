@@ -37,7 +37,7 @@ LDLIBS    = -lwiringPi -lwiringPiDev -lpthread -lm -lcrypt -lrt
 # Should not alter anything below this line
 ###############################################################################
 
-SRC	=	scan.c soft_i2c.c mcp2346.c read.c
+SRC	=	scan.c soft_i2c.c mcp2346.c read.c currvstime.c cvt.c
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -57,7 +57,14 @@ scan:	scan.o soft_i2c.o
 read:	read.o soft_i2c.o mcp3426.o
 	$Q echo [link]
 	$Q $(CC) -o $@ read.o soft_i2c.o mcp3426.o $(LDFLAGS) $(LDLIBS)
-
+	
+currvstime:    currvstime.o soft_i2c.o mcp3426.o
+	       $Q echo [link]
+	       $Q $(CC) -o $@ currvstime.o soft_i2c.o mcp3426.o $(LDFLAGS) $(LDLIBS)
+	       
+cvt:    cvt.o soft_i2c.o mcp3426.o
+	$Q echo [link]
+	$Q $(CC) -o $@ cvt.o soft_i2c.o mcp3426.o $(LDFLAGS) $(LDLIBS)
 
 .c.o:
 	$Q echo [CC] $<
